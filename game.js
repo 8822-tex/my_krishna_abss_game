@@ -144,6 +144,171 @@ function startGame() {
   }
 
   // CENTRAL ENTRANCE
+  
+  // ===== ABSSIT BUILDING DETAIL UPGRADE =====
+
+  const frameMat = material(0xe6e1d6);
+  const balconyMat = material(0xc8c4bc);
+  const railingMat = material(0x414b50);
+  const trimMat = material(0x8f2928);
+
+  // WINDOW FRAMES
+  for (let f = 0; f < floors; f++) {
+    const y = 0.8 + f * floorHeight + 1.8;
+
+    for (let x = -20; x <= 20; x += 3.2) {
+      // Left and right frame
+      box(0.12, 2.05, 0.22,
+          x - 1.25, y, -4.83,
+          frameMat, building);
+
+      box(0.12, 2.05, 0.22,
+          x + 1.25, y, -4.83,
+          frameMat, building);
+
+      // Top and bottom frame
+      box(2.6, 0.12, 0.22,
+          x, y + 1.0, -4.83,
+          frameMat, building);
+
+      box(2.6, 0.12, 0.22,
+          x, y - 1.0, -4.83,
+          frameMat, building);
+
+      // Vertical window divider
+      box(0.07, 1.8, 0.24,
+          x, y, -4.87,
+          railingMat, building);
+    }
+  }
+
+  // FLOOR LEDGES / BALCONY EDGES
+  for (let f = 1; f < floors; f++) {
+    const y = 0.8 + f * floorHeight;
+
+    // Projecting concrete ledge
+    box(width + 1.5, 0.22, 1.0,
+        0, y, -4.85,
+        balconyMat, building);
+
+    // Slim dark railing
+    box(width - 1, 0.08, 0.08,
+        0, y + 0.9, -5.3,
+        railingMat, building);
+
+    // Railing supports
+    for (let x = -21; x <= 21; x += 3) {
+      box(0.07, 0.9, 0.07,
+          x, y + 0.45, -5.3,
+          railingMat, building);
+    }
+  }
+
+  // ENTRANCE CANOPY
+  box(12, 0.38, 4.0,
+      0, 5.9, -6.1,
+      balconyMat, building);
+
+  // Canopy supports
+  for (const x of [-5, 5]) {
+    box(0.3, 2.8, 0.3,
+        x, 2.6, -7.6,
+        frameMat, building);
+  }
+
+  // Entrance side pillars
+  for (const x of [-5.2, 5.2]) {
+    box(0.45, 5.2, 0.5,
+        x, 3.4, -4.2,
+        redMat, building);
+  }
+
+  // Roof parapet
+  box(width + 1, 0.65, 0.65,
+      0, buildingHeight + 1.15, -5.0,
+      trimMat, building);
+
+  box(0.65, 0.65, depth + 0.5,
+      -width / 2, buildingHeight + 1.15, -13,
+      trimMat, building);
+
+  box(0.65, 0.65, depth + 0.5,
+      width / 2, buildingHeight + 1.15, -13,
+      trimMat, building);
+
+  // ===== CAMPUS LANDSCAPING =====
+
+  const pathMat = material(0xc9c5b9);
+  const borderMat = material(0xd6d0c2);
+  const flowerColors = [
+    0xffd166, 0xf28c9b, 0xf7f4e8
+  ];
+
+  // Wider entrance path
+  box(21, 0.1, 32,
+      0, 0.04, 11,
+      pathMat);
+
+  // Red-and-white curb blocks
+  for (let i = 0; i < 16; i++) {
+    const curbColor =
+      i % 2 === 0 ? redMat : whiteMat;
+
+    for (const side of [-1, 1]) {
+      box(0.38, 0.22, 1.8,
+          side * 10.7, 0.13, -2 + i * 1.8,
+          curbColor);
+    }
+  }
+
+  // Garden beds near the entrance
+  for (const side of [-1, 1]) {
+    box(5.5, 0.18, 12,
+        side * 16, 0.09, 3,
+        material(0x425f35));
+
+    for (let i = 0; i < 8; i++) {
+      const x = side * (14 + (i % 3) * 1.5);
+      const z = -1 + i * 1.5;
+
+      // Small decorative plants
+      const plant = new THREE.Mesh(
+        new THREE.SphereGeometry(0.32, 7, 6),
+        leafMat
+      );
+      plant.position.set(x, 0.45, z);
+      plant.scale.y = 0.8;
+      plant.castShadow = true;
+      scene.add(plant);
+
+      // Small flowers
+      const flower = new THREE.Mesh(
+        new THREE.SphereGeometry(0.13, 6, 5),
+        material(flowerColors[i % flowerColors.length])
+      );
+      flower.position.set(x, 0.72, z);
+      scene.add(flower);
+    }
+  }
+
+  // Small entrance lights
+  const lampMat = material(0xffe2a1, {
+    emissive: 0xffb347,
+    emissiveIntensity: 0.45
+  });
+
+  for (const x of [-7, 7]) {
+    box(0.16, 2.2, 0.16,
+        x, 1.1, 1,
+        darkMat);
+
+    box(0.48, 0.35, 0.48,
+        x, 2.25, 1,
+        lampMat);
+  }
+
+  // ===== END BUILDING UPGRADE =====
+
   box(8, 5.4, 0.45, 0, 3.5, -4.3,
       material(0xd6d3c9), building);
 
