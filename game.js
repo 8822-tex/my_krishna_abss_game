@@ -523,6 +523,34 @@ box(3.5, 0.12, 0.2,
   player.add(label);
 
   // CAMERA AND MOVEMENT
+  
+  // ===== SOLID BUILDING COLLISION =====
+  // Coordinates must match the building shell.
+
+  const solidWalls = [
+    // Left and right walls
+    { minX: -23.5, maxX: -22.5, minZ: -21, maxZ: -5 },
+    { minX:  22.5, maxX:  23.5, minZ: -21, maxZ: -5 },
+
+    // Back wall
+    { minX: -23, maxX: 23, minZ: -21.1, maxZ: -20.5 },
+
+    // Front wall: leave only the central door opening
+    { minX: -23, maxX: -3.5, minZ: -5.3, maxZ: -4.7 },
+    { minX:   3.5, maxX: 23, minZ: -5.3, maxZ: -4.7 }
+  ];
+
+  const playerRadius = 0.6;
+
+  function hitsWall(x, z) {
+    return solidWalls.some(w =>
+      x + playerRadius > w.minX &&
+      x - playerRadius < w.maxX &&
+      z + playerRadius > w.minZ &&
+      z - playerRadius < w.maxZ
+    );
+  }
+
   const keys = {};
   let yaw = 0;
   let pitch = 0.18;
@@ -633,11 +661,27 @@ box(3.5, 0.12, 0.2,
     if (keys.d || keys.arrowright) move.add(right);
     if (keys.a || keys.arrowleft) move.sub(right);
 
-    if (move.lengthSq() > 0) {
-      move.normalize();
-      player.position.addScaledVector(move, 8 * delta);
-      player.rotation.y = Math.atan2(move.x, move.z);
-    }
+    
+if (move.lengthSq() > 0) {
+  move.normalize();
+
+  const speed = 8 * delta;
+
+  const nextX = player.position.x + move.x * speed;
+  const nextZ = player.position.z + move.z * speed;
+
+  // Check each axis separately so the player
+  // can slide along a wall instead of getting stuck.
+  if (!hitsWall(nextX, player.position.z)) {
+    player.position.x = nextX;
+  }
+
+  if (!hitsWall(player.position.x, nextZ)) {
+    player.position.z = nextZ;
+  }
+
+  player.rotation.y = Math.atan2(move.x, move.z);
+}
 
     // Keep player inside the initial campus area
     player.position.x = THREE.MathUtils.clamp(
