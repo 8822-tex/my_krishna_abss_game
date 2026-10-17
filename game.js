@@ -659,11 +659,9 @@ interactBtn.addEventListener("click", () => {
 
   let previousTime = performance.now();
   function checkGateDistance() {
-  const distance = Math.sqrt(
-    player.position.x * player.position.x +
-    (player.position.z + 4.72) *
-    (player.position.z + 4.72)
-  );
+  const dx = player.position.x;
+  const dz = player.position.z + 4.72;
+  const distance = Math.sqrt(dx * dx + dz * dz);
 
   if (distance < 7 && !gateOpen) {
     interactBtn.style.display = "block";
