@@ -353,6 +353,19 @@ for (const x of [-1.7, 1.7]) {
 
 box(3.5, 0.12, 0.2,
     0, 4.6, -4.72, frameMat, doorGroup);
+  // OPEN button interaction
+const interactBtn = document.getElementById("interactBtn");
+
+let gateOpen = false;
+
+interactBtn.addEventListener("click", () => {
+  if (!gateOpen) {
+    gateOpen = true;
+
+    doorGroup.position.x = 3.5;
+    interactBtn.style.display = "none";
+  }
+});
 
   // ABSSIT SIGN
   box(14, 2.3, 0.45, 0, 14.2, -4.1,
@@ -645,12 +658,26 @@ box(3.5, 0.12, 0.2,
   const cameraPosition = new THREE.Vector3();
 
   let previousTime = performance.now();
+  function checkGateDistance() {
+  const distance = Math.sqrt(
+    player.position.x * player.position.x +
+    (player.position.z + 4.72) *
+    (player.position.z + 4.72)
+  );
+
+  if (distance < 7 && !gateOpen) {
+    interactBtn.style.display = "block";
+  } else {
+    interactBtn.style.display = "none";
+  }
+}
 
   function animate(now) {
     requestAnimationFrame(animate);
 
     const delta = Math.min((now - previousTime) / 1000, 0.05);
     previousTime = now;
+    checkGateDistance();
 
     forward.set(-Math.sin(yaw), 0, -Math.cos(yaw));
     right.set(Math.cos(yaw), 0, -Math.sin(yaw));
