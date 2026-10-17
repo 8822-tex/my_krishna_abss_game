@@ -115,9 +115,34 @@ function startGame() {
   const floors = 4;
   const buildingHeight = floors * floorHeight;
 
-  box(width, buildingHeight, depth,
-      0, buildingHeight / 2 + 0.8, -13,
-      whiteMat, building);
+  
+  // BUILDING SHELL: walls with a real entrance gap
+  const wallH = buildingHeight;
+  const wallY = wallH / 2 + 0.8;
+
+  // Back wall
+  box(width, wallH, 0.45,
+      0, wallY, -20.8, whiteMat, building);
+
+  // Left and right side walls
+  box(0.45, wallH, depth,
+      -23, wallY, -13, whiteMat, building);
+
+  box(0.45, wallH, depth,
+      23, wallY, -13, whiteMat, building);
+
+  // Front wall: leave central doorway open
+  // Door opening is approximately 7 units wide
+  box(19.5, wallH, 0.45,
+      -13.25, wallY, -5, whiteMat, building);
+
+  box(19.5, wallH, 0.45,
+      13.25, wallY, -5, whiteMat, building);
+
+  // Front wall above the doorway
+  box(7, 9.2, 0.45,
+      0, 10.6, -5, whiteMat, building);
+
 
   // Red architectural columns
   for (let x = -width / 2; x <= width / 2; x += 11.5) {
@@ -309,11 +334,25 @@ function startGame() {
 
   // ===== END BUILDING UPGRADE =====
 
-  box(8, 5.4, 0.45, 0, 3.5, -4.3,
-      material(0xd6d3c9), building);
+  // GLASS DOOR: visual panel only
+const doorGroup = new THREE.Group();
+scene.add(doorGroup);
 
-  box(5.2, 3.6, 0.2, 0, 2.8, -4.02,
-      glassMat, building);
+const doorGlass = new THREE.Mesh(
+  new THREE.BoxGeometry(3.2, 3.7, 0.12),
+  glassMat
+);
+
+doorGlass.position.set(0, 2.65, -4.72);
+doorGroup.add(doorGlass);
+
+for (const x of [-1.7, 1.7]) {
+  box(0.12, 3.8, 0.2,
+      x, 2.7, -4.72, frameMat, doorGroup);
+}
+
+box(3.5, 0.12, 0.2,
+    0, 4.6, -4.72, frameMat, doorGroup);
 
   // ABSSIT SIGN
   box(14, 2.3, 0.45, 0, 14.2, -4.1,
