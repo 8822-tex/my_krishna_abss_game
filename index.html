@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0,
+                 maximum-scale=1.0, user-scalable=no">
+  <title>ABSSIT Game - Meerut</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="loading">Loading ABSSIT Campus...</div>
+
+  <div id="hud">
+    <div class="brand">ABSSIT GAME</div>
+    <div id="status">Campus Explorer</div>
+    <div id="help">WASD / Arrow Keys: Move · Drag: Look</div>
+  </div>
+
+  <div id="controls">
+    <div class="move-pad">
+      <button data-move="forward">▲</button>
+      <div class="move-row">
+        <button data-move="left">◀</button>
+        <button data-move="backward">▼</button>
+        <button data-move="right">▶</button>
+      </div>
+    </div>
+    <button id="lookBtn">CAMERA</button>
+  </div>
+
+  <div id="error"></div>
+
+  <script type="module" src="game.js"></script>
+</body>
+</html>
